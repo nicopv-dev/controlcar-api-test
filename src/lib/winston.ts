@@ -5,7 +5,7 @@ const { combine, timestamp, printf, colorize, align } = winston.format;
 const myFormat = () =>
   printf(
     ({ level, message, label, timestamp }) =>
-      `${timestamp} [${label}] ${level}:${message}`
+      `${timestamp}[${label}] ${level}:${message}`
   );
 
 const format = combine(

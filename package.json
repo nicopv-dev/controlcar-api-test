@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "ts-node-dev -r tsconfig-paths/register src/index.ts",
     "start": "node dist/index.js",
-    "build": "tsc"
+    "build": "tsc",
+    "check:ts": "tsc --noEmit --skipLibCheck"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +24,7 @@
     "cors": "^2.8.5",
     "express": "^4.21.0",
     "morgan": "^1.10.0",
-    "winston": "^3.15.0"
+    "winston": "^3.15.0",
+    "zod": "^3.23.8"
   }
 }
