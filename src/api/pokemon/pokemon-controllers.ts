@@ -103,7 +103,11 @@ class PokemonController {
           const { name, url } = pokemon;
           const id = url.split("/")[6];
 
-          return { id, name, url, captured: false };
+          const { data } = await this.pokemonService.getPokemon(id);
+
+          const image = data.sprites.front_default;
+
+          return { id, name, url, image, captured: false };
         })
       );
 

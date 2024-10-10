@@ -3,6 +3,7 @@ export default interface Pokemon {
   name: string;
   url: string;
   captured: boolean;
+  image: string;
 }
 
 interface PokemonType {
@@ -17,5 +18,6 @@ export interface PokemonDetails {
   types: PokemonType[];
   sprites: {
     back_default: string;
+    front_default: string;
   };
 }

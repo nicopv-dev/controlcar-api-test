@@ -1,6 +1,7 @@
 import express from "express";
 import { logger } from "./lib/winston";
 import cors from "cors";
+import morgan from "morgan";
 import { errorsMiddleware } from "./middleware/errors";
 
 import pokemonRoutes from "./api/pokemon/pokemon-routes";
@@ -16,6 +17,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(morgan("dev"));
 
 app.get("/", (req, res) => {
   res.send("Hello World");
