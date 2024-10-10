@@ -1,6 +1,6 @@
-import { pokeapi } from "@/lib/axios";
-import { PokemonDetails } from "@/types/models/pokemon";
-import PokemonResponse from "@/types/response/pokemon-response";
+import { pokeapi } from "../../lib/axios";
+import { PokemonDetails } from "../../types/models/pokemon";
+import PokemonResponse from "../../types/response/pokemon-response";
 import { AxiosResponse } from "axios";
 
 export class PokemonService {

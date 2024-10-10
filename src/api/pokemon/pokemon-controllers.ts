@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
 import { PokemonService } from "./pokemon-service";
-import { BadRequestException } from "@/types/exceptions/bad-request-exception";
-import type Pokemon from "@/types/models/pokemon";
-import { NotFoundException } from "@/types/exceptions/not-found-exception";
+import { BadRequestException } from "../../types/exceptions/bad-request-exception";
+import type Pokemon from "../../types/models/pokemon";
+import { NotFoundException } from "../../types/exceptions/not-found-exception";
 
 class PokemonController {
   private pokemonService: PokemonService;

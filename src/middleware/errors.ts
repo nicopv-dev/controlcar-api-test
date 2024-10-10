@@ -1,5 +1,5 @@
-import { logger } from "@/lib/winston";
-import ErrorResponse from "@/types/response/error-response";
+import { logger } from "../lib/winston";
+import ErrorResponse from "../types/response/error-response";
 import type { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
 
