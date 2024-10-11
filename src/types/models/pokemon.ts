@@ -4,6 +4,7 @@ export default interface Pokemon {
   url: string;
   captured: boolean;
   image: string;
+  types: PokemonType[];
 }
 
 interface PokemonType {

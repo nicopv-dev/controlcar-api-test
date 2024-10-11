@@ -26,6 +26,14 @@ export class PokemonService {
 
   getPokemon = async (id: string) =>
     await pokeapi.get<PokemonDetails>(`/pokemon/${id}`);
+
+  getTypes = async () =>
+    await pokeapi.get<{
+      results: Array<{
+        name: string;
+        url: string;
+      }>;
+    }>("/type");
 }
 
 const pokemonService = new PokemonService();

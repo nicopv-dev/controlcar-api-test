@@ -3,6 +3,7 @@ import { PokemonService } from "./pokemon-service";
 import { BadRequestException } from "../../types/exceptions/bad-request-exception";
 import type Pokemon from "../../types/models/pokemon";
 import { NotFoundException } from "../../types/exceptions/not-found-exception";
+import { PokemonSearchQuerySchema } from "@/types/query/search-query";
 
 class PokemonController {
   private pokemonService: PokemonService;
@@ -59,9 +60,10 @@ class PokemonController {
 
       const findPokemon = this.pokemons.find((pokemon) => pokemon.id === id);
 
-      if (!findPokemon) throw new BadRequestException("Pokemon not found");
+      if (!findPokemon)
+        throw new BadRequestException(`Pokemon ${id} not found`);
 
-      if (this.pokemosCaptured.length === 2) {
+      if (this.pokemosCaptured.length === 6) {
         this.pokemosCaptured.shift();
         this.pokemosCaptured.push(findPokemon);
         res.status(200).json({ message: "Pokemon captured" });
@@ -107,7 +109,18 @@ class PokemonController {
 
           const image = data.sprites.front_default;
 
-          return { id, name, url, image, captured: false };
+          const isCaptured = this.pokemosCaptured.find(
+            (pokemon) => pokemon.id === id
+          );
+
+          return {
+            id,
+            name,
+            url,
+            image,
+            captured: !!isCaptured,
+            types: data.types,
+          };
         })
       );
 
@@ -141,6 +154,42 @@ class PokemonController {
       this.setPokemonsCaptured(updatedPokemonsCaptured);
 
       res.status(200).json({ message: "Pokemon removed" });
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  searchPokemon = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { q, type } = PokemonSearchQuerySchema.parse(req.query);
+
+      const pokemons = this.pokemons.filter((pokemon) => {
+        const matchesName = pokemon.name
+          .toLowerCase()
+          .includes(q.toLowerCase());
+        const matchesType = type
+          ? pokemon.types.find((t) => t.type.name === type)
+          : true;
+        return matchesName && matchesType;
+      });
+
+      if (!pokemons) throw new NotFoundException("Pokemons not found");
+
+      res.status(200).json(pokemons);
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  getTypes = async (_: Request, res: Response, next: NextFunction) => {
+    try {
+      const { status, data } = await this.pokemonService.getTypes();
+
+      if (status !== 200) throw new BadRequestException("Error fetching types");
+
+      const soted = data.results.sort((a, b) => a.name.localeCompare(b.name));
+
+      res.status(200).json(soted);
     } catch (e) {
       next(e);
     }
