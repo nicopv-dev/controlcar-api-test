@@ -4,6 +4,7 @@ import { BadRequestException } from "../../types/exceptions/bad-request-exceptio
 import type Pokemon from "../../types/models/pokemon";
 import { NotFoundException } from "../../types/exceptions/not-found-exception";
 import { PokemonSearchQuerySchema } from "../../types/query/search-query";
+import { pokemonQueryBuilder } from "@/types/query/pokemon-query";
 
 class PokemonController {
   private pokemonService: PokemonService;
@@ -20,23 +21,6 @@ class PokemonController {
 
   setPokemonsCaptured = (data: Pokemon[]) => {
     this.pokemosCaptured = data;
-  };
-
-  getPokemons = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const totalPokemons = this.pokemons.length;
-
-      if (totalPokemons === 0)
-        throw new NotFoundException("No pokemons into list");
-
-      res.status(200).json({
-        totalPokemons,
-        page: 1,
-        pokemons: this.pokemons,
-      });
-    } catch (e) {
-      next(e);
-    }
   };
 
   addCapturedPokemon = async (
@@ -161,21 +145,33 @@ class PokemonController {
 
   searchPokemon = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { q, type } = PokemonSearchQuerySchema.parse(req.query);
-
-      const pokemons = this.pokemons.filter((pokemon) => {
+      const { q: name, type, page } = PokemonSearchQuerySchema.parse(req.query);
+      console.log(page);
+      const filterPokemons = this.pokemons.filter((pokemon) => {
         const matchesName = pokemon.name
           .toLowerCase()
-          .includes(q.toLowerCase());
+          .includes(name.toLowerCase());
         const matchesType = type
           ? pokemon.types.find((t) => t.type.name === type)
           : true;
         return matchesName && matchesType;
       });
 
-      if (!pokemons) throw new NotFoundException("Pokemons not found");
+      if (!filterPokemons) throw new NotFoundException("Pokemons not found");
 
-      res.status(200).json(pokemons);
+      const limit = 10;
+      const { totalPages } = pokemonQueryBuilder(filterPokemons.length, limit);
+
+      if (page > totalPages) throw new NotFoundException("Page not found");
+
+      const results = filterPokemons.slice((page - 1) * limit, page * limit);
+
+      res.status(200).json({
+        page,
+        totalPages,
+        total: filterPokemons.length,
+        results,
+      });
     } catch (e) {
       next(e);
     }
