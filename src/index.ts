@@ -30,3 +30,5 @@ app.use(errorsMiddleware);
 app.listen(3000, () => {
   logger.info(`Server is running on port ${SERVER_PORT}`);
 });
+
+export default app;
