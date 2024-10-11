@@ -3,7 +3,7 @@ import { PokemonService } from "./pokemon-service";
 import { BadRequestException } from "../../types/exceptions/bad-request-exception";
 import type Pokemon from "../../types/models/pokemon";
 import { NotFoundException } from "../../types/exceptions/not-found-exception";
-import { PokemonSearchQuerySchema } from "@/types/query/search-query";
+import { PokemonSearchQuerySchema } from "../../types/query/search-query";
 
 class PokemonController {
   private pokemonService: PokemonService;
