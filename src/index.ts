@@ -3,6 +3,7 @@ import { logger } from "./lib/winston";
 import cors from "cors";
 import morgan from "morgan";
 import { errorsMiddleware } from "./middleware/errors";
+import serverless from "serverless-http";
 
 import pokemonRoutes from "./api/pokemon/pokemon-routes";
 
@@ -27,8 +28,8 @@ app.use("/pokemon", pokemonRoutes);
 
 app.use(errorsMiddleware);
 
-app.listen(3000, () => {
-  logger.info(`Server is running on port ${SERVER_PORT}`);
-});
+// app.listen(3000, () => {
+//   logger.info(`Server is running on port ${SERVER_PORT}`);
+// });
 
-export default app;
+export const handler = serverless(app);
