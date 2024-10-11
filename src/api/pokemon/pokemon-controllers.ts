@@ -146,7 +146,7 @@ class PokemonController {
   searchPokemon = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { q: name, type, page } = PokemonSearchQuerySchema.parse(req.query);
-      console.log(page);
+
       const filterPokemons = this.pokemons.filter((pokemon) => {
         const matchesName = pokemon.name
           .toLowerCase()
@@ -159,17 +159,33 @@ class PokemonController {
 
       if (!filterPokemons) throw new NotFoundException("Pokemons not found");
 
+      const changeStatusCaptured = filterPokemons.map((poekemon) => {
+        const isCaptured = this.pokemosCaptured.find(
+          (p) => p.id === poekemon.id
+        );
+        return {
+          ...poekemon,
+          captured: !!isCaptured,
+        };
+      });
+
       const limit = 10;
-      const { totalPages } = pokemonQueryBuilder(filterPokemons.length, limit);
+      const { totalPages } = pokemonQueryBuilder(
+        changeStatusCaptured.length,
+        limit
+      );
 
       if (page > totalPages) throw new NotFoundException("Page not found");
 
-      const results = filterPokemons.slice((page - 1) * limit, page * limit);
+      const results = changeStatusCaptured.slice(
+        (page - 1) * limit,
+        page * limit
+      );
 
       res.status(200).json({
         page,
         totalPages,
-        total: filterPokemons.length,
+        total: changeStatusCaptured.length,
         results,
       });
     } catch (e) {
