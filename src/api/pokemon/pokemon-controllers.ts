@@ -4,7 +4,7 @@ import { BadRequestException } from "../../types/exceptions/bad-request-exceptio
 import type Pokemon from "../../types/models/pokemon";
 import { NotFoundException } from "../../types/exceptions/not-found-exception";
 import { PokemonSearchQuerySchema } from "../../types/query/search-query";
-import { pokemonQueryBuilder } from "@/types/query/pokemon-query";
+import { pokemonQueryBuilder } from "../../types/query/pokemon-query";
 
 class PokemonController {
   private pokemonService: PokemonService;
